@@ -19,6 +19,6 @@ public class Category {
     private String name;
 
     @ManyToOne
-    private Category category;
+    private Category parentCategory;
 
 }

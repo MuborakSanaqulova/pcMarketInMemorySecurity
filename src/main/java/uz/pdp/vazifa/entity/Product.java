@@ -22,10 +22,10 @@ public class Product {
 
     private Double price;
 
-    @OneToOne
+    @ManyToOne
     private Brand brand;
 
-    @OneToOne
+    @ManyToOne
     private Category category;
 
 }
