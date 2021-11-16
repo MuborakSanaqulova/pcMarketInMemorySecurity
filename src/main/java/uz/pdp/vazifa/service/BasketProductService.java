@@ -12,6 +12,7 @@ import uz.pdp.vazifa.payload.BasketProductDto;
 import uz.pdp.vazifa.payload.BrandDto;
 import uz.pdp.vazifa.repository.BasketProductRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -79,6 +80,10 @@ public class BasketProductService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void deleteByBasketId(Integer basketId){
+        basketProductRepository.deleteAllByBasketId(basketId);
     }
 
 }

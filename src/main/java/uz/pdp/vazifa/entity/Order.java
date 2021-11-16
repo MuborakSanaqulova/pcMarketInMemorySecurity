@@ -19,6 +19,6 @@ public class Order {
     private Double price;
 
     @OneToOne
-    private Basket basket;
+    private User user;
 
 }

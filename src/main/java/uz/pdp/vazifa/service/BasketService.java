@@ -41,4 +41,7 @@ public class BasketService {
         basketRepository.deleteById(id);
     }
 
+    public Optional<Basket> getByUserId(Integer userId){
+        return basketRepository.findByUserId(userId);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.pdp.vazifa.common.ApiResponse;
@@ -24,12 +25,14 @@ public class AttachmentController {
     @Autowired
     AttachmentService attachmentService;
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @GetMapping
     public ResponseEntity<Page<Attachment>> getInfo(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Attachment> all = attachmentService.getAttachments(pageable);
         return ResponseEntity.ok(all);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getAttachment(@PathVariable Integer id, HttpServletResponse response) throws IOException {
         ApiResponse one = attachmentService.findOne(id, response);
@@ -38,6 +41,7 @@ public class AttachmentController {
         return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @PostMapping
     public HttpEntity<ApiResponse> uploadFile(MultipartHttpServletRequest request) throws IOException {
         ApiResponse post = attachmentService.post(request);
@@ -46,6 +50,7 @@ public class AttachmentController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(post);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> delete(@PathVariable Integer id){
         ApiResponse delete = attachmentService.delete(id);

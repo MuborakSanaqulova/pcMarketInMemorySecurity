@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.vazifa.entity.SupplierMessage;
 import uz.pdp.vazifa.payload.SupplierMassageDto;
@@ -19,12 +20,14 @@ public class SupplierMessageController {
     @Autowired
     SupplierMessageService messageService;
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @GetMapping
     public ResponseEntity<?> getAll(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<SupplierMessage> supplierMessages = messageService.getAll(pageable);
         return ResponseEntity.ok(supplierMessages);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable Integer id) {
         SupplierMessage message = messageService.getById(id);
@@ -33,18 +36,21 @@ public class SupplierMessageController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR','OPERATOR')")
     @PostMapping
     public ResponseEntity<?> add(@RequestBody SupplierMassageDto supplierMassageDto) {
         SupplierMessage supplierMessage = messageService.add(supplierMassageDto);
         return ResponseEntity.status(supplierMessage != null ? 202 : 409).body(supplierMessage);
     }
 
+    @PreAuthorize(value = "hasAnyRole('SUPER_ADMIN','MODERATOR')")
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@PathVariable Integer id, @RequestBody SupplierMassageDto supplierMassageDto) {
         SupplierMessage supplierMessage = messageService.edit(id, supplierMassageDto);
         return ResponseEntity.status(supplierMessage != null ? 202 : 409).body(supplierMessage);
     }
 
+    @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id){
         boolean delete = messageService.delete(id);
